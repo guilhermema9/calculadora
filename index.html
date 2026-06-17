@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Viabilidade Imobiliária</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+    background:#f4f6f9;
+    color:#333;
+    padding:20px;
+}
+
+.container{
+    max-width:1600px;
+    margin:auto;
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+.subtitulo{
+    margin:25px 0 15px;
+    color:#0d6efd;
+    border-bottom:2px solid #e5e5e5;
+    padding-bottom:8px;
+}
+
+.card{
+    background:#fff;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.linha-venda{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:14px;
+}
+
+input[readonly]{
+    background:#eef3f7;
+    font-weight:600;
+}
+
+.highlight{
+    margin-top:15px;
+    padding:15px;
+    background:#eef5ff;
+    border-left:5px solid #0d6efd;
+    border-radius:6px;
+    display:flex;
+    justify-content:space-between;
+    font-size:18px;
+    font-weight:700;
+}
+
+.highlight-success{
+    background:#e8f8ee;
+    border-left:5px solid #198754;
+}
+
+.cards-resumo{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin:20px 0;
+}
+
+.card-kpi{
+    background:#fff;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.card-kpi h3{
+    font-size:14px;
+    color:#666;
+    margin-bottom:10px;
+}
+
+.card-kpi span{
+    font-size:24px;
+    font-weight:700;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:12px;
+}
+
+th{
+    background:#f3f3f3;
+}
+
+@media(max-width:1200px){
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .cards-resumo{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+
+    .grid,
+    .linha-venda,
+    .cards-resumo{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Calculadora de Viabilidade Imobiliária</h1>
+
+<!-- LOTE -->
+
+<section class="card">
+
+<h2>Aquisição do Lote</h2>
+
+<div class="grid">
+
+<div>
+<label>Valor do Lote</label>
+<input type="number" id="valorLote">
+</div>
+
+<div>
+<label>Metragem do Lote (m²)</label>
+<input type="number" id="metragemLote">
+</div>
+
+<div>
+<label>Valor m² do Lote</label>
+<input type="text" id="valorMetroLote" readonly>
+</div>
+
+<div>
+<label>Registro Cartório</label>
+<input type="number" id="registroLote">
+</div>
+
+<div>
+<label>ITBI</label>
+<input type="number" id="itbi">
+</div>
+
+</div>
+
+<div class="highlight">
+<span>Custo Total do Lote</span>
+<span id="custoTotalLote">R$ 0,00</span>
+</div>
+
+</section>
+
+<!-- CONSTRUÇÃO -->
+
+<section class="card">
+
+<h2>Construção do Imóvel</h2>
+
+<h3 class="subtitulo">Custos Diretos</h3>
+
+<div class="grid">
+
+<div>
+<label>Metragem Construída (m²)</label>
+<input type="number" id="metragemConstrucao">
+</div>
+
+<div>
+<label>Projetos</label>
+<input type="number" id="projetos">
+</div>
+
+<div>
+<label>Preparação do Terreno</label>
+<input type="number" id="preparacaoTerreno">
+</div>
+
+<div>
+<label>Canteiro de Obras</label>
+<input type="number" id="canteiro">
+</div>
+
+<div>
+<label>Material</label>
+<input type="number" id="material">
+</div>
+
+<div>
+<label>Mão de Obra</label>
+<input type="number" id="maoObra">
+</div>
+
+</div>
+
+<div class="highlight">
+<span>Custo Direto da Construção</span>
+<span id="custoDiretoConstrucao">R$ 0,00</span>
+</div>
+
+<div class="highlight">
+<span>Custo Construção / m²</span>
+<span id="custoMetroConstrucao">R$ 0,00</span>
+</div>
+
+<h3 class="subtitulo">Custos Indiretos</h3>
+
+<div class="grid">
+
+<div><label>Aprovação Prefeitura</label><input type="number" id="aprovacao"></div>
+<div><label>Alvará</label><input type="number" id="alvara"></div>
+<div><label>Taxa Engenharia Caixa</label><input type="number" id="taxaEngenharia"></div>
+<div><label>Assinatura Caixa</label><input type="number" id="assinaturaCaixa"></div>
+<div><label>Registro Financiamento</label><input type="number" id="registroFinanciamento"></div>
+<div><label>Juros Obra</label><input type="number" id="jurosObra"></div>
+<div><label>Vistorias Caixa</label><input type="number" id="vistorias"></div>
+<div><label>INSS Obra</label><input type="number" id="inss"></div>
+<div><label>Habite-se</label><input type="number" id="habite"></div>
+<div><label>Registro Imóvel</label><input type="number" id="registroImovel"></div>
+
+</div>
+
+<div class="highlight">
+<span>Custos Indiretos da Construção</span>
+<span id="custoIndiretoConstrucao">R$ 0,00</span>
+</div>
+
+<div class="highlight highlight-success">
+<span>Custo Total da Construção</span>
+<span id="custoTotalConstrucao">R$ 0,00</span>
+</div>
+
+</section>
+
+<!-- VENDA -->
+
+<section class="card">
+
+<h2>Venda do Imóvel</h2>
+
+<div class="linha-venda">
+
+<div>
+<label>Preço de Venda</label>
+<input type="number" id="precoVenda">
+</div>
+
+<div>
+<label>Comissão (%)</label>
+<input type="number" id="comissao" value="5" step="0.1">
+</div>
+
+<div>
+<label>Valor Comissão</label>
+<input type="text" id="valorComissao" readonly>
+</div>
+
+</div>
+
+<div class="linha-venda">
+
+<div></div>
+
+<div>
+<label>IR Ganho Capital (%)</label>
+<input type="number" id="percentualIR" value="15" step="0.1">
+</div>
+
+<div>
+<label>Valor IR</label>
+<input type="text" id="valorIR" readonly>
+</div>
+
+</div>
+
+</section>
+
+<!-- KPI -->
+
+<section class="card">
+
+<h2>Indicadores Financeiros</h2>
+
+<div class="cards-resumo">
+
+<div class="card-kpi">
+<h3>Custo Total Empreendimento</h3>
+<span id="kpiCustoTotal">R$ 0,00</span>
+</div>
+
+<div class="card-kpi">
+<h3>Lucro Antes do IR</h3>
+<span id="kpiLucroAntesIR">R$ 0,00</span>
+</div>
+
+<div class="card-kpi">
+<h3>Lucro Líquido</h3>
+<span id="kpiLucroLiquido">R$ 0,00</span>
+</div>
+
+<div class="card-kpi">
+<h3>ROE</h3>
+<span id="kpiROE">0%</span>
+</div>
+
+<div class="card-kpi">
+<h3>EBITDA</h3>
+<span id="kpiEBITDA">R$ 0,00</span>
+</div>
+
+<div class="card-kpi">
+<h3>Margem EBITDA</h3>
+<span id="kpiMargem">0%</span>
+</div>
+
+<div class="card-kpi">
+<h3>Receita Líquida</h3>
+<span id="kpiReceitaLiquida">R$ 0,00</span>
+</div>
+
+<div class="card-kpi">
+<h3>Capital Próprio</h3>
+<input type="number" id="capitalProprio">
+</div>
+
+</div>
+
+</section>
+
+<!-- DRE -->
+
+<section class="card">
+
+<h2>DRE Simplificado</h2>
+
+<table>
+
+<tr>
+<th>Descrição</th>
+<th>Valor</th>
+</tr>
+
+<tr>
+<td>Receita Bruta</td>
+<td id="dreReceitaBruta"></td>
+</tr>
+
+<tr>
+<td>(-) Comissão</td>
+<td id="dreComissao"></td>
+</tr>
+
+<tr>
+<td>Receita Líquida Operacional</td>
+<td id="dreReceitaLiquida"></td>
+</tr>
+
+<tr>
+<td>(-) Aquisição do Lote</td>
+<td id="dreLote"></td>
+</tr>
+
+<tr>
+<td>(-) Construção</td>
+<td id="dreConstrucao"></td>
+</tr>
+
+<tr>
+<td>Lucro Antes do IR</td>
+<td id="dreLucroAntesIR"></td>
+</tr>
+
+<tr>
+<td>(-) IR Ganho Capital</td>
+<td id="dreIR"></td>
+</tr>
+
+<tr>
+<td><strong>Lucro Líquido</strong></td>
+<td id="dreLucroLiquido"></td>
+</tr>
+
+</table>
+
+</section>
+
+</div>
+
+<script>
+
+function valor(id){
+    return parseFloat(document.getElementById(id).value) || 0;
+}
+
+function moeda(v){
+    return v.toLocaleString('pt-BR',{
+        style:'currency',
+        currency:'BRL'
+    });
+}
+
+function calcular(){
+
+    const valorLote = valor('valorLote');
+    const metragemLote = valor('metragemLote');
+
+    const custoLote =
+        valorLote +
+        valor('registroLote') +
+        valor('itbi');
+
+    document.getElementById('custoTotalLote').textContent =
+        moeda(custoLote);
+
+    document.getElementById('valorMetroLote').value =
+        metragemLote > 0
+        ? moeda(valorLote / metragemLote)
+        : moeda(0);
+
+    const custoDireto =
+        valor('projetos') +
+        valor('preparacaoTerreno') +
+        valor('canteiro') +
+        valor('material') +
+        valor('maoObra');
+
+    document.getElementById('custoDiretoConstrucao').textContent =
+        moeda(custoDireto);
+
+    const metroConstrucao =
+        valor('metragemConstrucao');
+
+    document.getElementById('custoMetroConstrucao').textContent =
+        metroConstrucao > 0
+        ? moeda(custoDireto / metroConstrucao)
+        : moeda(0);
+
+    const custoIndireto =
+        valor('aprovacao') +
+        valor('alvara') +
+        valor('taxaEngenharia') +
+        valor('assinaturaCaixa') +
+        valor('registroFinanciamento') +
+        valor('jurosObra') +
+        valor('vistorias') +
+        valor('inss') +
+        valor('habite') +
+        valor('registroImovel');
+
+    document.getElementById('custoIndiretoConstrucao').textContent =
+        moeda(custoIndireto);
+
+    const custoConstrucao =
+        custoDireto +
+        custoIndireto;
+
+    document.getElementById('custoTotalConstrucao').textContent =
+        moeda(custoConstrucao);
+
+    const precoVenda = valor('precoVenda');
+
+    const percentualComissao = valor('comissao');
+
+    const comissao =
+        precoVenda *
+        percentualComissao / 100;
+
+    document.getElementById('valorComissao').value =
+        moeda(comissao);
+
+    const receitaLiquida =
+        precoVenda - comissao;
+
+    const lucroAntesIR =
+        receitaLiquida -
+        custoLote -
+        custoConstrucao;
+
+    const percentualIR =
+        valor('percentualIR');
+
+    const imposto =
+        lucroAntesIR > 0
+        ? lucroAntesIR * percentualIR / 100
+        : 0;
+
+    document.getElementById('valorIR').value =
+        moeda(imposto);
+
+    const lucroLiquido =
+        lucroAntesIR - imposto;
+
+    const custoTotalEmpreendimento =
+        custoLote +
+        custoConstrucao +
+        comissao +
+        imposto;
+
+    const capitalProprio =
+        valor('capitalProprio');
+
+    const roe =
+        capitalProprio > 0
+        ? (lucroLiquido / capitalProprio) * 100
+        : 0;
+
+    const ebitda = lucroAntesIR;
+
+    const margem =
+        precoVenda > 0
+        ? (ebitda / precoVenda) * 100
+        : 0;
+
+    document.getElementById('kpiCustoTotal').textContent =
+        moeda(custoTotalEmpreendimento);
+
+    document.getElementById('kpiLucroAntesIR').textContent =
+        moeda(lucroAntesIR);
+
+    document.getElementById('kpiLucroLiquido').textContent =
+        moeda(lucroLiquido);
+
+    document.getElementById('kpiROE').textContent =
+        roe.toFixed(2) + '%';
+
+    document.getElementById('kpiEBITDA').textContent =
+        moeda(ebitda);
+
+    document.getElementById('kpiMargem').textContent =
+        margem.toFixed(2) + '%';
+
+    document.getElementById('kpiReceitaLiquida').textContent =
+        moeda(receitaLiquida);
+
+    document.getElementById('dreReceitaBruta').textContent =
+        moeda(precoVenda);
+
+    document.getElementById('dreComissao').textContent =
+        moeda(comissao);
+
+    document.getElementById('dreReceitaLiquida').textContent =
+        moeda(receitaLiquida);
+
+    document.getElementById('dreLote').textContent =
+        moeda(custoLote);
+
+    document.getElementById('dreConstrucao').textContent =
+        moeda(custoConstrucao);
+
+    document.getElementById('dreLucroAntesIR').textContent =
+        moeda(lucroAntesIR);
+
+    document.getElementById('dreIR').textContent =
+        moeda(imposto);
+
+    document.getElementById('dreLucroLiquido').textContent =
+        moeda(lucroLiquido);
+}
+
+document.querySelectorAll('input').forEach(input=>{
+    input.addEventListener('input',calcular);
+});
+
+calcular();
+
+</script>
+
+</body>
+</html>
